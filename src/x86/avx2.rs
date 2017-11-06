@@ -1006,7 +1006,19 @@ pub unsafe fn _mm256_permute4x64_epi64(a: i64x4, imm8: i32) -> i64x4 {
     }
 }
 
-// TODO _mm256_permute2x128_si256 (__m256i a, __m256i b, const int imm8)
+/// Shuffle 258-bits (composed of integer data) selected by `imm8`
+/// from `a` and `b`.
+#[inline(always)]
+#[target_feature = "+avx2"]
+#[cfg_attr(test, assert_instr(vperm2i128, imm8 = 0x31))]
+pub unsafe fn _mm256_permute2x128_si256(a: i64x4, b: i64x4, imm8: i8) -> i64x4 {
+    macro_rules! call {
+        ($imm8:expr) => { vperm2i128(a, b, $imm8) }
+    }
+    constify_imm8!(imm8, call)
+}
+
+
 // TODO _mm256_permute4x64_pd (__m256d a, const int imm8)
 // TODO _mm256_permutevar8x32_ps (__m256 a, __m256i idx)
 
@@ -1970,6 +1982,8 @@ extern "C" {
     fn pshufb(a: u8x32, b: u8x32) -> u8x32;
     #[link_name = "llvm.x86.avx2.permd"]
     fn permd(a: u32x8, b: u32x8) -> u32x8;
+    #[link_name = "llvm.x86.avx2.vperm2i128"]
+    fn vperm2i128(a: i64x4, b: i64x4, imm8: i8) -> i64x4;
 }
 
 #[cfg(test)]
