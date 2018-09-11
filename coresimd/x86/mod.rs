@@ -331,6 +331,27 @@ types! {
     /// ```
     #[stable(feature = "simd_x86", since = "1.27.0")]
     pub struct __m256d(f64, f64, f64, f64);
+
+    /// 512-bit wide integer vector type, x86-specific
+    ///
+    /// This type is the same as the `__m512i` type defined by Intel,
+    /// representing a 512-bit SIMD register. Usage of this type typically
+    /// corresponds to the `avx512f` and up target features for x86/x86_64.
+    ///
+    /// Internally this type may be viewed as:
+    ///
+    /// * `i8x64` - sixty-four `i8` variables packed together
+    /// * `i16x32` - thirty-two `i16` variables packed together
+    /// * `i32x16` - sixteen `i32` variables packed together
+    /// * `i64x8` - eight `i64` variables packed together
+    ///
+    /// (as well as unsigned versions). Each intrinsic may interpret the
+    /// internal bits differently, check the documentation of the intrinsic
+    /// to see how it's being used.
+    ///
+    /// Note that this means that an instance of `__m512i` typically just means
+    /// a "bag of bits" which is left up to interpretation at the point of use.
+    pub struct __m512i(i64, i64, i64, i64, i64, i64, i64, i64);
 }
 
 #[cfg(test)]
