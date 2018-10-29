@@ -29,13 +29,13 @@ pub unsafe fn _mm512_setr_epi32(
 #[target_feature(enable = "avx512f")]
 #[cfg_attr(test, assert_instr(vpabsd))]
 pub unsafe fn _mm512_abs_epi32(a: __m512i) -> __m512i {
-    mem::transmute(pabsd(a.as_i32x16()))
+    mem::transmute(pabsd512(a.as_i32x16()))
 }
 
 #[allow(improper_ctypes)]
 extern "C" {
-    #[link_name = "llvm.x86.avx2.pabs.d"]
-    fn pabsd(a: i32x16) -> u32x16;
+    #[link_name = "llvm.x86.avx512.pabs.d.512"]
+    fn pabsd512(a: i32x16) -> u32x16;
 }
 
 #[cfg(test)]
