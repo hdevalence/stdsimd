@@ -465,6 +465,59 @@ impl m256iExt for __m256i {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[unstable(feature = "stdimd_internal", issue = "0")]
+pub(crate) trait m512iExt: Sized {
+    fn as_m512i(self) -> __m512i;
+
+    #[inline]
+    fn as_u8x64(self) -> ::coresimd::simd::u8x64 {
+        unsafe { mem::transmute(self.as_m512i()) }
+    }
+
+    #[inline]
+    fn as_u16x32(self) -> ::coresimd::simd::u16x32 {
+        unsafe { mem::transmute(self.as_m512i()) }
+    }
+
+    #[inline]
+    fn as_u32x16(self) -> ::coresimd::simd::u32x16 {
+        unsafe { mem::transmute(self.as_m512i()) }
+    }
+
+    #[inline]
+    fn as_u64x8(self) -> ::coresimd::simd::u64x8 {
+        unsafe { mem::transmute(self.as_m512i()) }
+    }
+
+    #[inline]
+    fn as_i8x64(self) -> ::coresimd::simd::i8x64 {
+        unsafe { mem::transmute(self.as_m512i()) }
+    }
+
+    #[inline]
+    fn as_i16x32(self) -> ::coresimd::simd::i16x32 {
+        unsafe { mem::transmute(self.as_m512i()) }
+    }
+
+    #[inline]
+    fn as_i32x16(self) -> ::coresimd::simd::i32x16 {
+        unsafe { mem::transmute(self.as_m512i()) }
+    }
+
+    #[inline]
+    fn as_i64x8(self) -> ::coresimd::simd::i64x8 {
+        unsafe { mem::transmute(self.as_m512i()) }
+    }
+}
+
+impl m512iExt for __m512i {
+    #[inline]
+    fn as_m512i(self) -> Self {
+        self
+    }
+}
+
 mod eflags;
 pub use self::eflags::*;
 
