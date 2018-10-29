@@ -56,12 +56,12 @@ mod tests {
         );
         let r = _mm512_abs_epi32(a);
         #[cfg_attr(rustfmt, rustfmt_skip)]
-        let e = _mm256_setr_epi32(
+        let e = _mm512_setr_epi32(
             0, 1, 1, std::i32::MAX,
             std::i32::MAX.wrapping_add(1), 100, 100, 32,
             0, 1, 1, std::i32::MAX,
             std::i32::MAX.wrapping_add(1), 100, 100, 32,
         );
-        assert_eq_m256i(r, e);
+        assert_eq_m512i(r, e);
     }
 }
