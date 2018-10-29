@@ -103,6 +103,56 @@ pub unsafe fn get_m256(a: __m256, idx: usize) -> f32 {
     A { a }.b[idx]
 }
 
+#[target_feature(enable = "avx512f")]
+pub unsafe fn assert_eq_m512i(a: __m512i, b: __m512i) {
+    union A {
+        a: __m512i,
+        b: [u64; 8],
+    }
+    assert_eq!(A { a }.b, A { a: b }.b)
+}
+
+// commented out because these need to be changed
+// avx512 intrinsics return masks
+/*
+#[target_feature(enable = "avx512f")]
+pub unsafe fn assert_eq_m512d(a: __m512d, b: __m512d) {
+    let cmp = _mm512_cmp_pd(a, b, _CMP_EQ_OQ);
+    if _mm512_movemask_pd(cmp) != 0b1111 {
+        panic!("{:?} != {:?}", a, b);
+    }
+}
+
+#[target_feature(enable = "avx512f")]
+pub unsafe fn get_m512d(a: __m512d, idx: usize) -> f64 {
+    union A {
+        a: __m512d,
+        b: [f64; 8],
+    };
+    A { a }.b[idx]
+}
+
+#[target_feature(enable = "avx512f")]
+pub unsafe fn assert_eq_m512(a: __m512, b: __m512) {
+    let cmp = _mm512_cmp_ps(a, b, _CMP_EQ_OQ);
+    if _mm512_movemask_ps(cmp) != 0b11111111 {
+        panic!("{:?} != {:?}", a, b);
+    }
+}
+*/
+
+// need to add __m512 type
+/*
+#[target_feature(enable = "avx512f")]
+pub unsafe fn get_m512(a: __m512, idx: usize) -> f32 {
+    union A {
+        a: __m512,
+        b: [f32; 16],
+    };
+    A { a }.b[idx]
+}
+*/
+
 // These intrinsics doesn't exist on x86 b/c it requires a 64-bit register,
 // which doesn't exist on x86!
 #[cfg(target_arch = "x86")]
