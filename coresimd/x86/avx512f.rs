@@ -18,7 +18,7 @@ use stdsimd_test::assert_instr;
 pub unsafe fn _mm512_setr_epi32(
     e0: i32, e1: i32, e2: i32, e3: i32, e4: i32, e5: i32, e6: i32, e7: i32,
     e8: i32, e9: i32, e10: i32, e11: i32, e12: i32, e13: i32, e14: i32, e15: i32,
-) -> __m256i {
+) -> __m512i {
     mem::transmute(i32x16::new(e15, e14, e13, e12, e11, e10, e9, e8, e7, e6, e5, e4, e3, e2, e1, e0))
 }
 
