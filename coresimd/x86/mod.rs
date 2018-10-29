@@ -501,6 +501,9 @@ pub use self::avx2::*;
 mod fma;
 pub use self::fma::*;
 
+mod avx512f;
+pub use self::avx512f::*;
+
 mod abm;
 pub use self::abm::*;
 mod bmi1;
