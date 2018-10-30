@@ -8,6 +8,78 @@ use mem;
 #[cfg(test)]
 use stdsimd_test::assert_instr;
 
+/// Broadcast 8-bit integer `a` to all elements of returned vector.
+/// This intrinsic may generate the `vpbroadcastb`.
+///
+/// [Intel's documentation](https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm512_set1_epi8)
+#[inline]
+#[target_feature(enable = "avx512f")]
+// This intrinsic has no corresponding instruction.
+pub unsafe fn _mm512_set1_epi8(a: i8) -> __m512i {
+    #[cfg_attr(rustfmt, rustfmt_skip)]
+    _mm512_set_epi8(
+        a, a, a, a, a, a, a, a,
+        a, a, a, a, a, a, a, a,
+        a, a, a, a, a, a, a, a,
+        a, a, a, a, a, a, a, a,
+        a, a, a, a, a, a, a, a,
+        a, a, a, a, a, a, a, a,
+        a, a, a, a, a, a, a, a,
+        a, a, a, a, a, a, a, a,
+    )
+}
+
+/// Broadcast 16-bit integer `a` to all all elements of returned vector.
+/// This intrinsic may generate the `vpbroadcastw`.
+///
+/// [Intel's documentation](https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm512_set1_epi16)
+#[inline]
+#[target_feature(enable = "avx512f")]
+// This intrinsic has no corresponding instruction.
+pub unsafe fn _mm512_set1_epi16(a: i16) -> __m512i {
+    #[cfg_attr(rustfmt, rustfmt_skip)]
+    _mm512_set_epi16(
+        a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+        a, a, a, a, a, a, a, a, a, a, a, a, a, a, a, a,
+    )
+}
+
+/// Broadcast 32-bit integer `a` to all elements of returned vector.
+/// This intrinsic may generate the `vpbroadcastd`.
+///
+/// [Intel's documentation](https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm512_set1_epi32)
+#[inline]
+#[target_feature(enable = "avx512f")]
+// This intrinsic has no corresponding instruction.
+pub unsafe fn _mm512_set1_epi32(a: i32) -> __m512i {
+    #[cfg_attr(rustfmt, rustfmt_skip)]
+    _mm512_set_epi32(
+        a, a, a, a, a, a, a, a,
+        a, a, a, a, a, a, a, a,
+    )
+}
+
+/// Broadcast 64-bit integer `a` to all elements of returned vector.
+/// This intrinsic may generate the `vpbroadcastq`.
+///
+/// [Intel's documentation](https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm512_set1_epi64)
+#[inline]
+#[target_feature(enable = "avx512f")]
+// This intrinsic has no corresponding instruction.
+pub unsafe fn _mm512_set1_epi64(a: i64) -> __m512i {
+    _mm512_set_epi64(a, a, a, a, a, a, a, a)
+}
+
+/// Return vector of type __m512i with all elements set to zero.
+///
+/// [Intel's documentation](https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm512_setzero_si512)
+#[inline]
+#[target_feature(enable = "avx512f")]
+#[cfg_attr(test, assert_instr(vpxorq))]
+pub unsafe fn _mm512_setzero_si512() -> __m512i {
+    _mm512_set1_epi8(0)
+}
+
 /// Set packed 8-bit integers in returned vector with the supplied values.
 ///
 /// [Intel's documentation](https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm512_set_epi8)
@@ -58,7 +130,8 @@ pub unsafe fn _mm512_set_epi16(
     ))
 }
 
-/// Set packed 32-bit integers in returned vector with the supplied values in reverse order.
+/// Set packed 32-bit integers in returned vector with the supplied values in
+/// reverse order.
 ///
 /// [Intel's documentation](https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm512_setr_epi32)
 #[inline]
@@ -92,7 +165,8 @@ pub unsafe fn _mm512_set_epi32(
     ))
 }
 
-/// Set packed 64-bit integers in returned vector with the supplied values in reverse order.
+/// Set packed 64-bit integers in returned vector with the supplied values in
+/// reverse order.
 ///
 /// [Intel's documentation](https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm512_setr_epi64)
 #[inline]
@@ -101,7 +175,7 @@ pub unsafe fn _mm512_set_epi32(
 pub unsafe fn _mm512_setr_epi64(
     e7: i64, e6: i64, e5: i64, e4: i64, e3: i64, e2: i64, e1: i64, e0: i64,
 ) -> __m512i {
-    mem::transmute(i64x8::new(e7, e6, e5, e4, e3, e2, e1, e0,))
+    mem::transmute(i64x8::new(e7, e6, e5, e4, e3, e2, e1, e0))
 }
 
 /// Set packed 64-bit integers in returned vector with the supplied values.
@@ -113,7 +187,7 @@ pub unsafe fn _mm512_setr_epi64(
 pub unsafe fn _mm512_set_epi64(
     e7: i64, e6: i64, e5: i64, e4: i64, e3: i64, e2: i64, e1: i64, e0: i64,
 ) -> __m512i {
-    mem::transmute(i64x8::new(e0, e1, e2, e3, e4, e5, e6, e7,))
+    mem::transmute(i64x8::new(e0, e1, e2, e3, e4, e5, e6, e7))
 }
 
 /// Add packed 64-bit integers in `a` and `b`.
@@ -124,6 +198,34 @@ pub unsafe fn _mm512_set_epi64(
 #[cfg_attr(test, assert_instr(vpaddq))]
 pub unsafe fn _mm512_add_epi64(a: __m512i, b: __m512i) -> __m512i {
     mem::transmute(simd_add(a.as_i64x8(), b.as_i64x8()))
+}
+
+/// Add packed 64-bit integers in `a` and `b`, and return the results
+/// using writemask `k` (elements are copied from `src` when the
+/// corresponding mask bit is not set).
+///
+/// [Intel's documentation](https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm512_mask_add_epi64)
+#[inline]
+#[target_feature(enable = "avx512f")]
+#[cfg_attr(test, assert_instr(vpaddq))]
+pub unsafe fn _mm512_mask_add_epi64(
+    src: __m512i, k: __mmask8, a: __m512i, b: __m512i,
+) -> __m512i {
+    simd_select(k.0, _mm512_add_epi64(a, b), src)
+}
+
+/// Add packed 64-bit integers in a and b, and return the results using
+/// zeromask k (elements are zeroed out when the corresponding mask bit is not
+/// set).
+///
+/// [Intel's documentation](https://software.intel.com/sites/landingpage/IntrinsicsGuide/#text=_mm512_maskz_add_epi64)
+#[inline]
+#[target_feature(enable = "avx512f")]
+#[cfg_attr(test, assert_instr(vpaddq))]
+pub unsafe fn _mm512_maskz_add_epi64(
+    k: __mmask8, a: __m512i, b: __m512i,
+) -> __m512i {
+    simd_select(k.0, _mm512_add_epi64(a, b), _mm512_setzero_si512())
 }
 
 /// Add packed 32-bit integers in `a` and `b`.
@@ -165,19 +267,41 @@ mod tests {
 
     #[simd_test(enable = "avx512f")]
     unsafe fn test_mm512_add_epi64() {
-        let a = _mm512_set_epi64(-10, 0, 100, 1_000_000_000, -10, 0, 100, 1_000_000_000);
-        let b = _mm512_set_epi64(-1, 0, 1, 2, -1, 0, 1, 2, );
+        let a = _mm512_set_epi64(
+            -10,
+            0,
+            100,
+            1_000_000_000,
+            -10,
+            0,
+            100,
+            1_000_000_000,
+        );
+        let b = _mm512_set_epi64(-1, 0, 1, 2, -1, 0, 1, 2);
         let r = _mm512_add_epi64(a, b);
-        let e = _mm512_set_epi64(-11, 0, 101, 1_000_000_002, -11, 0, 101, 1_000_000_002,);
+        let e = _mm512_set_epi64(
+            -11,
+            0,
+            101,
+            1_000_000_002,
+            -11,
+            0,
+            101,
+            1_000_000_002,
+        );
         assert_eq_m512i(r, e);
     }
 
     #[simd_test(enable = "avx512f")]
     unsafe fn test_mm512_add_epi32() {
-        let a = _mm512_set_epi32(-1, 0, 1, 2, 3, 4, 5, 6,-1, 0, 1, 2, 3, 4, 5, 6,);
-        let b = _mm512_set_epi32(1, 2, 3, 4, 5, 6, 7, 8,1, 2, 3, 4, 5, 6, 7, 8,);
+        let a =
+            _mm512_set_epi32(-1, 0, 1, 2, 3, 4, 5, 6, -1, 0, 1, 2, 3, 4, 5, 6);
+        let b =
+            _mm512_set_epi32(1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8);
         let r = _mm512_add_epi32(a, b);
-        let e = _mm512_set_epi32(0, 2, 4, 6, 8, 10, 12, 14,0, 2, 4, 6, 8, 10, 12, 14,);
+        let e = _mm512_set_epi32(
+            0, 2, 4, 6, 8, 10, 12, 14, 0, 2, 4, 6, 8, 10, 12, 14,
+        );
         assert_eq_m512i(r, e);
     }
 

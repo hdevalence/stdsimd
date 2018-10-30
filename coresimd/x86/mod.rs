@@ -354,6 +354,11 @@ types! {
     pub struct __m512i(i64, i64, i64, i64, i64, i64, i64, i64);
 }
 
+pub struct __mmask8(u8);
+pub struct __mmask16(u16);
+pub struct __mmask32(u32);
+pub struct __mmask64(u64);
+
 #[cfg(test)]
 mod test;
 #[cfg(test)]
